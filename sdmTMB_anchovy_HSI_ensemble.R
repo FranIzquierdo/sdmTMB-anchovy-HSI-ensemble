@@ -2165,22 +2165,21 @@ ggsave(file.path(path_params, "parameter_plot.png"), p_params,
 #   epsilon_wgs84.zip  — compressed archive
 
 ## Epsilon export --------------------------------------------------------------
-cat("\n", strrep("=", 60), "\n")
-cat("Epsilon export\n")
-cat(strrep("=", 60), "\n")
 
 years_sorted <- sort(years_sel)
 
+# Reproject mask to km CRS to match preds_ens_yr coordinates
+mask_inner_km <- terra::project(mask_inner_final, crs_km)
+
 # Build one raster layer per year by rasterizing ensemble epsilon_st onto the
 # mask template (same extent and resolution as mask_inner_final).
-cat("Building epsilon raster stack (", length(years_sorted), "layers)...\n")
 
 eps_layers <- lapply(years_sorted, function(yr) {
   df_yr <- preds_ens_yr |>
     filter(Year == yr) |>
     select(X, Y, epsilon_st)
   pts <- terra::vect(df_yr, geom = c("X", "Y"), crs = crs_km)
-  r   <- terra::rasterize(pts, mask_inner_final, field = "epsilon_st", fun = mean)
+  r   <- terra::rasterize(pts, mask_inner_km, field = "epsilon_st", fun = mean)
   names(r) <- paste0("Y", yr)
   r
 })
