@@ -10,13 +10,11 @@ The key output is the spatiotemporal random field ε_{s,t}, which captures inter
 
 A systematic sensitivity analysis is run across 2 pseudo-absence (PA) methods (buffer and rwpas), 3 presence:absence ratios (1:1, 1:3, 1:5), 2 spatiotemporal structures (RW and AR1) and 10 random seeds (120 model runs). 
 
-Finally, the best PA configuration, ratio and spatiotemporal structure for 10 seeds is combined into an ensemble of 7 models (average predictions, not parameters)to reduce sensitivity to pseudo-absence placement/generation and quantify inter-model uncertainty.
+Finally, the best PA configuration, ratio and spatiotemporal structure for 10 seeds is combined into an ensemble of 7 models (average predictions, not parameters) to reduce sensitivity to pseudo-absence placement/generation and quantify inter-model uncertainty.
 
 ## Dependencies
 
 R packages: `sdmTMB`, `INLA`, `blockCV`, `DHARMa`, `pROC`, `ecospat`, `flexsdm`, `terra`, `sf`, `ggplot2`, `patchwork`, `rnaturalearth`, `openxlsx`
-
-Quarto (≥ 1.4) required to render the report.
 
 ## Folder structure
 
