@@ -3,7 +3,7 @@
 # Engraulis encrasicolus — Anchovy HSI
 # Author: Francisco Izquierdo
 # Contributor: Gabriella Lo Cicero
-# Last edit: 21 May 2026
+# Last edit: 06 July 2026
 #==========================================================
 
 # Anchovy (Engraulis encrasicolus) HSI — western Mediterranean.
@@ -81,6 +81,36 @@ library(GGally)
 library(tidyterra)
 library(ggridges)
 library(blockCV)
+
+# Session info (for reproducibility):
+#
+#   R version: 4.5.1
+#   sp             2.2.1
+#   sf             1.1.0
+#   INLA           25.6.7
+#   dplyr          1.2.1
+#   marmap         1.0.12
+#   terra          1.9.1
+#   visreg         2.8.0
+#   Hmisc          5.2.5
+#   sdmTMB         1.0.0
+#   TMB            1.9.21
+#   fmesher        0.5.0
+#   Matrix         1.7.3
+#   ggplot2        4.0.3
+#   DHARMa         0.4.7
+#   corrplot       0.95
+#   sdmTMBextra    0.0.5
+#   rnaturalearth  1.1.0
+#   openxlsx       4.2.8.1
+#   flexsdm        1.3.9
+#   pROC           1.19.0.1
+#   future         1.70.0
+#   patchwork      1.3.2
+#   GGally         2.3.0
+#   tidyterra      0.7.2
+#   ggridges       0.5.7
+#   blockCV        3.2.0
 
 ## Directories -----------------------------------------------------------------
 
@@ -1603,19 +1633,6 @@ ggsave(file.path(path_cv, "cv_blocks.png"), p_blocks,
        width = 8, height = 11, dpi = 300)
 cat("Saved: cv_blocks.png\n")
 
-# Save fold summary (presences + background per fold) for Quarto table
-fold_summary <- data.frame(
-  fold       = k_vals,
-  n_pres     = as.integer(table(fold_df$fold)[as.character(k_vals)]),
-  n_bg_union = sapply(pa_test_by_fold, nrow)
-)
-fold_summary <- rbind(
-  fold_summary,
-  data.frame(fold = 0L, n_pres = sum(fold_summary$n_pres),
-             n_bg_union = sum(fold_summary$n_bg_union))
-)
-write.csv(fold_summary, file.path(path_cv, "cv_fold_summary.csv"), row.names = FALSE)
-
 # ── Test background per fold ──────────────────────────────────────────────────
 
 # Pool all unique PA locations from all 7 seeds, assign to folds, split by fold
@@ -1645,6 +1662,19 @@ cat("Background locations per fold (union of all 7 seeds, all unique — no subs
 cat("  Presences per fold: "); print(table(fold_df$fold))
 cat("  Background per fold:\n")
 print(sapply(pa_test_by_fold, nrow))
+
+# Save fold summary (presences + background per fold) for Quarto table
+fold_summary <- data.frame(
+  fold       = k_vals,
+  n_pres     = as.integer(table(fold_df$fold)[as.character(k_vals)]),
+  n_bg_union = sapply(pa_test_by_fold, nrow)
+)
+fold_summary <- rbind(
+  fold_summary,
+  data.frame(fold = 0L, n_pres = sum(fold_summary$n_pres),
+             n_bg_union = sum(fold_summary$n_bg_union))
+)
+write.csv(fold_summary, file.path(path_cv, "cv_fold_summary.csv"), row.names = FALSE)
 
 # ── Combined loop: held-out presences + held-out background ───────────────────
 
